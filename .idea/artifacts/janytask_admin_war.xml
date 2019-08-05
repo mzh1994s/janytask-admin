@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="janytask-admin:war">
-    <output-path>$PROJECT_DIR$/janytask-admin/target</output-path>
-    <root id="archive" name="janytask-admin-1.0.0-SNAPSHOTS.war">
-      <element id="artifact" artifact-name="janytask-admin:war exploded" />
-    </root>
-  </artifact>
-</component>
