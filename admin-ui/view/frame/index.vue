@@ -1,7 +1,5 @@
 <template>
-    <div v-if="notLogin">
-        没有登录
-    </div>
+    <LoginView v-if="isUnauthorized"></LoginView>
     <div v-else class="layout">
         <Layout>
             <Header>
@@ -72,11 +70,15 @@
     </div>
 </template>
 <script>
+    import LoginView from './login';
+
     export default {
+        components: {
+            LoginView: LoginView,
+        },
         data() {
             return {
-                visible: true,
-                notLogin: true
+                isUnauthorized: true,
             }
         },
         created() {

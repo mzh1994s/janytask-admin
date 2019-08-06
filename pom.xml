@@ -8,7 +8,7 @@
     <groupId>cn.mzhong</groupId>
     <artifactId>janytask-admin</artifactId>
     <version>1.0.0-SNAPSHOTS</version>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
 
     <dependencies>
         <dependency>
