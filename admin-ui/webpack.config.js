@@ -45,6 +45,9 @@ module.exports = {
         contentBase: path.join(__dirname, __output_path),
         compress: true,
         hot: true,
-        port: 9000
+        port: 9000,
+        proxy: {
+            '/' : 'http://localhost:8000'
+        }
     }
 }
