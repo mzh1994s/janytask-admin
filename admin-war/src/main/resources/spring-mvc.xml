@@ -9,9 +9,7 @@
 
     <mvc:annotation-driven validator="validator"/>
 
-    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
-        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
-    </bean>
+    <bean id="validator" class="cn.mzhong.janytask.admin.base.HibernateValidationFactoryBean"/>
 
     <context:component-scan base-package="cn.mzhong.janytask.admin">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>

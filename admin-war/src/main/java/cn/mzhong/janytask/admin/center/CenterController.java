@@ -17,14 +17,14 @@ public class CenterController {
     DatabaseInitializer initializer;
 
     @RequestMapping(value = "isInited")
-    public RestInfo<Boolean> isInited() {
-        return RestInfo.success(false);
+    public RestInfo isInited() {
+        return RestInfo.success(initializer.isInited());
     }
 
     @RequestMapping(value = "awaitInit", method = RequestMethod.POST)
-    public RestInfo<Boolean> awaitInit(@RequestBody @Validated User user) {
+    public RestInfo awaitInit(@RequestBody @Validated User user) {
         if (!initializer.isInited()) {
-            initializer.awaitInit();
+            initializer.awaitInit(user);
         }
         return RestInfo.success();
     }

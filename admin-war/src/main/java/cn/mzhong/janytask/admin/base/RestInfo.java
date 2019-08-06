@@ -6,17 +6,17 @@ import java.io.Serializable;
 import java.util.List;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class RestInfo<T extends Serializable> implements Serializable {
+public class RestInfo implements Serializable {
     private static final long serialVersionUID = -7165330465816791059L;
     protected int code;
-    protected T data;
+    protected Serializable data;
     protected String msg;
     protected List<String> details;
 
     public RestInfo() {
     }
 
-    public RestInfo(int code, T data) {
+    public RestInfo(int code, Serializable data) {
         this.code = code;
         this.data = data;
     }
@@ -39,7 +39,7 @@ public class RestInfo<T extends Serializable> implements Serializable {
         return data;
     }
 
-    public void setData(T data) {
+    public void setData(Serializable data) {
         this.data = data;
     }
 
@@ -59,22 +59,22 @@ public class RestInfo<T extends Serializable> implements Serializable {
         this.details = details;
     }
 
-    public static <T extends Serializable> RestInfo<T> success(T data) {
-        return new RestInfo<T>(0, data);
+    public static RestInfo success(Serializable data) {
+        return new RestInfo(0, data);
     }
 
-    public static <T extends Serializable> RestInfo<T> success() {
-        return new RestInfo<T>(0, null);
+    public static RestInfo success() {
+        return new RestInfo(0, null);
     }
 
-    public static RestInfo<String> error(String message) {
-        RestInfo<String> rInfo = new RestInfo<>();
+    public static RestInfo error(String message) {
+        RestInfo rInfo = new RestInfo();
         rInfo.code = -1;
         rInfo.msg = message;
         return rInfo;
     }
 
-    public static RestInfo<String> error() {
+    public static RestInfo error() {
         return error("未知异常");
     }
 

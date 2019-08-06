@@ -1,6 +1,8 @@
 package cn.mzhong.janytask.admin.center;
 
+import cn.mzhong.janytask.admin.base.po.User;
 import cn.mzhong.janytask.admin.center.mapper.main.InitMainMapper;
+import cn.mzhong.janytask.admin.center.mapper.main.UserMapper;
 import cn.mzhong.janytask.admin.conf.SQLiteConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,9 @@ public class DatabaseInitializer {
 
     @Autowired
     InitMainMapper initMainMapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     private static boolean dbExists(String location) {
         File file = new File(location);
@@ -39,8 +44,9 @@ public class DatabaseInitializer {
                 && initMainMapper.isInited();
     }
 
-    public void awaitInit() {
+    public void awaitInit(User user) {
         createLocation(SQLiteConfig.DB_MAIN_LOCATION);
         initMainMapper.initTables();
+        userMapper.insert(user);
     }
 }

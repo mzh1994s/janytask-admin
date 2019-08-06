@@ -80,10 +80,11 @@
         methods: {
             handleSubmit() {
                 this.$refs['registryForm'].validate(valid => {
-                    if (!valid) {
+                    if (valid) {
                         this.isSubmitting = true;
                         $http.post2('center/awaitInit.json', this.user).then(response => {
-                            this.status = 2;
+                            // 触发finish事件
+                            this.$emit('finish', this.user);
                         }).catch(error => {
                             this.$Message.info({
                                 content: error.msg,

@@ -11,7 +11,7 @@
         <Spin size="large" fix key="__status0"></Spin>
     </div>
     <div v-else-if="status==1">
-        <RegistryView></RegistryView>
+        <RegistryView @finish="finishRegistry"></RegistryView>
     </div>
     <div v-else="status==2">
         <LoginView v-if="isUnauthorized"></LoginView>
@@ -122,6 +122,10 @@
         methods: {
             toggleVisible() {
                 this.visible = !this.visible;
+            },
+            finishRegistry(user){
+                console.log(user);
+                this.status = 2;
             }
         }
     }
