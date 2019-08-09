@@ -18,7 +18,7 @@
 <template>
     <div class="login_layout">
         <div class="login_form">
-            <Card :style="{padding: '30px 30px 0 0'}">
+            <Card style="padding: 30px 30px 0 0">
                 <Form ref="loginForm" :model="loginInfo" :label-width="80">
                     <FormItem label="用户名" prop="user">
                         <Input type="text" v-model="loginInfo.username"></Input>
