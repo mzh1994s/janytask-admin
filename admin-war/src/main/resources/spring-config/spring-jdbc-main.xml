@@ -5,13 +5,12 @@
 
     <bean id="mainDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
         <property name="driverClassName" value="org.sqlite.JDBC"/>
-        <property name="url"
-                  value="#{'jdbc:sqlite:' + T(cn.mzhong.janytask.admin.conf.SQLiteConfig).DB_MAIN_LOCATION}"/>
+        <property name="url" value="#{'jdbc:sqlite:' + T(cn.mzhong.janytask.admin.conf.SQLiteConfig).DB_MAIN_LOCATION}"/>
     </bean>
 
     <bean id="mainSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="mainDataSource"/>
-        <property name="mapperLocations" value="classpath:mybatis/mapper/main/*.xml"/>
+        <property name="mapperLocations" value="classpath*:cn/mzhong/janytask/admin/**/mapper/main/*.xml"/>
     </bean>
 
     <bean id="mainMapperConfiger" class="org.mybatis.spring.mapper.MapperScannerConfigurer">

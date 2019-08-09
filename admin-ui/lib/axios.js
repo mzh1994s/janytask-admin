@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-function Http(options) {
+function Axios(options) {
     return new Promise(function (resolve, reject) {
         axios(options).then(response => {
             if (response.status === 200) {
@@ -30,11 +30,11 @@ function Http(options) {
  * @param url
  * @param options
  */
-Http.get = function (url, options) {
+Axios.get = function (url, options) {
     let internalOptions = options || {};
     internalOptions.url = url;
     internalOptions.method = 'GET';
-    return Http(internalOptions);
+    return Axios(internalOptions);
 }
 
 /**
@@ -43,12 +43,12 @@ Http.get = function (url, options) {
  * @param data
  * @param options
  */
-Http.post = function (url, data, options) {
+Axios.post = function (url, data, options) {
     let internalOptions = options || {};
     internalOptions.url = url;
     internalOptions.method = 'POST';
     internalOptions.data = data;
-    return Http(internalOptions);
+    return Axios(internalOptions);
 }
 
 /**
@@ -57,14 +57,14 @@ Http.post = function (url, data, options) {
  * @param data
  * @param options
  */
-Http.post2 = function (url, data, options) {
+Axios.post2 = function (url, data, options) {
     let internalOptions = options || {};
     internalOptions.url = url;
     internalOptions.method = 'POST';
     internalOptions.headers = internalOptions.headers || {};
     internalOptions.headers['Content-Type'] = 'application/json';
     internalOptions.data = JSON.stringify(data);
-    return Http(internalOptions);
+    return Axios(internalOptions);
 }
 
-export default Http;
+export default Axios;

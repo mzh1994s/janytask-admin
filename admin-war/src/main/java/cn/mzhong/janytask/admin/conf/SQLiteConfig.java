@@ -6,6 +6,6 @@ public abstract class SQLiteConfig {
     private SQLiteConfig() {
     }
 
-    public final static String DB_MAIN_LOCATION = SystemConfig.DATA_LOCATION + File.separator + "main.db";
+    public final static String DB_MAIN_LOCATION = SystemConfig.WORK_LOCATION + File.separator + "main.db";
 
 }

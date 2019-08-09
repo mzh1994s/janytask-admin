@@ -11,7 +11,7 @@
         <Spin size="large" fix key="__status0"></Spin>
     </div>
     <div v-else-if="status==1">
-        <RegistryView @finish="finishRegistry"></RegistryView>
+        <InitializeView @finish="finishInitialize"></InitializeView>
     </div>
     <div v-else="status==2">
         <LoginView v-if="isUnauthorized"></LoginView>
@@ -87,23 +87,22 @@
 </template>
 <script>
     import LoginView from './login';
-    import RegistryView from './registry';
+    import InitializeView from './Initializer';
 
     export default {
         components: {
             LoginView: LoginView,
-            RegistryView: RegistryView
+            InitializeView: InitializeView
         },
         data() {
             return {
                 status: 0,
                 msg: '正在初始化...',
-                isUnauthorized: true,
-                isNeedRegistry: false,
+                isUnauthorized: true
             }
         },
         created() {
-            $http.get('center/isInited.json')
+            this.$axios.get('center/isInitialize.json')
                 .then(response => {
                     // 未初始化
                     if (!response.data) {
@@ -123,8 +122,7 @@
             toggleVisible() {
                 this.visible = !this.visible;
             },
-            finishRegistry(user){
-                console.log(user);
+            finishInitialize(){
                 this.status = 2;
             }
         }

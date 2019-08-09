@@ -5,23 +5,24 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.List;
 
+@SuppressWarnings("ALL")
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class RestInfo implements Serializable {
+public class ResponseInfo implements Serializable {
     private static final long serialVersionUID = -7165330465816791059L;
     protected int code;
     protected Serializable data;
     protected String msg;
     protected List<String> details;
 
-    public RestInfo() {
+    public ResponseInfo() {
     }
 
-    public RestInfo(int code, Serializable data) {
+    public ResponseInfo(int code, Serializable data) {
         this.code = code;
         this.data = data;
     }
 
-    public RestInfo(int code, String message, List<String> details) {
+    public ResponseInfo(int code, String message, List<String> details) {
         this.code = code;
         this.msg = message;
         this.details = details;
@@ -35,8 +36,8 @@ public class RestInfo implements Serializable {
         this.code = code;
     }
 
-    public Object getData() {
-        return data;
+    public <T extends Serializable> T getData() {
+        return (T) data;
     }
 
     public void setData(Serializable data) {
@@ -59,28 +60,36 @@ public class RestInfo implements Serializable {
         this.details = details;
     }
 
-    public static RestInfo success(Serializable data) {
-        return new RestInfo(0, data);
+    public static ResponseInfo success(Serializable data) {
+        return new ResponseInfo(0, data);
     }
 
-    public static RestInfo success() {
-        return new RestInfo(0, null);
+    public static ResponseInfo success() {
+        return new ResponseInfo(0, null);
     }
 
-    public static RestInfo error(String message) {
-        RestInfo rInfo = new RestInfo();
+    public static ResponseInfo error(String message) {
+        ResponseInfo rInfo = new ResponseInfo();
         rInfo.code = -1;
         rInfo.msg = message;
         return rInfo;
     }
 
-    public static RestInfo error() {
+    public static ResponseInfo error(ResponseException responseException) {
+        ResponseInfo rInfo = new ResponseInfo();
+        rInfo.code = responseException.getCode();
+        rInfo.msg = responseException.getLocalizedMessage();
+        rInfo.details = responseException.getDetails();
+        return rInfo;
+    }
+
+    public static ResponseInfo error() {
         return error("未知异常");
     }
 
     @Override
     public String toString() {
-        return "RestInfo{" +
+        return "ResponseInfo{" +
                 "code=" + code +
                 ", data=" + data +
                 ", msg='" + msg + '\'' +

@@ -1,4 +1,4 @@
-package cn.mzhong.janytask.admin.base;
+package cn.mzhong.janytask.admin.spring.components;
 
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;

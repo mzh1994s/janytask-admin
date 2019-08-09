@@ -28,6 +28,8 @@
                     </FormItem>
                     <FormItem label="验证码" prop="verifyCode">
                         <Input type="text" v-model="loginInfo.verifyCode" number></Input>
+                        <img :src="verifyCodeUri" alt="验证码"/>
+                        <a @click="refreshVerifyCode()">看不清</a>
                     </FormItem>
                     <FormItem>
                         <Button type="primary" @click="handleSubmit()" long>登录</Button>
@@ -41,6 +43,7 @@
     export default {
         data() {
             return {
+                verifyCodeCnt: 0,
                 loginInfo: {
                     username: '',
                     password: '',
@@ -49,11 +52,19 @@
             }
         },
         methods: {
+            refreshVerifyCode(){
+                this.verifyCodeCnt++;
+            },
             handleSubmit() {
                 alert(this.loginInfo.username);
-                axios.get('/').then(response => {
+                this.$axios.post2('/', loginInfo).then(response => {
                     console.log(response.data);
                 })
+            }
+        },
+        computed: {
+            verifyCodeUri(){
+                return "verify_code/generate.do?key=login&t=" + this.verifyCodeCnt
             }
         }
     }
