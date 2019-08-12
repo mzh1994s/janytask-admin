@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.mzhong.janytask.admin.center.mapper.main.UserMapper">
+<mapper namespace="cn.mzhong.janytask.admin.base.mapper.main.UserMapper">
 
     <select id="isTableCreated" resultType="boolean">
         SELECT count( * ) _count FROM sqlite_master WHERE type = 'table' AND name =  'ja_user'

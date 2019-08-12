@@ -1,9 +1,6 @@
-package cn.mzhong.janytask.admin.common;
+package cn.mzhong.janytask.admin.base.verifycode;
 
-import cn.mzhong.janytask.admin.base.ResponseException;
-import com.github.bingoohuang.patchca.custom.ConfigurableCaptchaService;
-import com.github.bingoohuang.patchca.service.CaptchaService;
-import com.github.bingoohuang.patchca.utils.encoder.EncoderHelper;
+import cn.mzhong.janytask.admin.response.ResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
-@RequestMapping(value = "verify_code")
+@RequestMapping(value = "verify-code")
 @Controller
 public class VerifyCodeController {
 

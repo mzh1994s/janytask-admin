@@ -135,7 +135,7 @@
             },
             handleFinish() {
                 // 触发finish事件，将数据提交给frame
-                this.$emit('finish', this.prepareData);
+                this.$emit('finished', this.prepareData);
             }
         }
     }

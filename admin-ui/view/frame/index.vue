@@ -8,13 +8,13 @@
         <Spin size="large" fix key="__status_1">{{msg}}</Spin>
     </div>
     <div v-else-if="status==0">
-        <Spin size="large" fix key="__status0"></Spin>
+        <Spin size="large" fix key="__status_0"></Spin>
     </div>
     <div v-else-if="status==1">
-        <InitializeView @finish="finishInitialize"></InitializeView>
+        <InitializeView @finished="handleInitializeFinished"></InitializeView>
     </div>
     <div v-else="status==2">
-        <LoginView v-if="isUnauthorized"></LoginView>
+        <LoginView v-if="isUnauthorized" @finished="handleLoginFinished"></LoginView>
         <div v-else class="layout">
             <Layout>
                 <Header>
@@ -102,7 +102,8 @@
             }
         },
         created() {
-            this.$axios.get('center/isInitialize.json')
+            window.__vueFrame = this;
+            this.$axios.get('initialize/isInitialize.json')
                 .then(response => {
                     // 未初始化
                     if (!response.data) {
@@ -113,8 +114,12 @@
                         this.status = 2;
                     }
                 }).catch(error => {
-                    this.status = -1;
-                    this.msg = error.msg;
+                    if (error.code === -403) {
+                        this.status = 2;
+                    } else {
+                        this.status = -1;
+                        this.msg = error.msg;
+                    }
                 }
             );
         },
@@ -122,8 +127,12 @@
             toggleVisible() {
                 this.visible = !this.visible;
             },
-            finishInitialize(){
+            handleInitializeFinished() {
                 this.status = 2;
+            },
+            handleLoginFinished(userInfo) {
+                console.log(userInfo);
+                this.isUnauthorized = false;
             }
         }
     }

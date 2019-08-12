@@ -3,27 +3,31 @@ import axios from 'axios';
 function Axios(options) {
     return new Promise(function (resolve, reject) {
         axios(options).then(response => {
-            if (response.status === 200) {
-                let rInfo = response.data;
-                if (rInfo.code >= 0) {
-                    return resolve(rInfo);
-                } else {
-                    return reject(rInfo);
-                }
+            let rInfo = response.data;
+            if (rInfo.code >= 0) {
+                return resolve(rInfo);
+            } else {
+                return reject(rInfo);
+            }
+        }).catch(error => {
+            let response = error.response;
+            if (response.status === 403 && window.__vueFrame != null) {
+                window.__vueFrame.isUnauthorized = true;
+                return reject({
+                    code: -403,
+                    msg: '未登录！',
+                });
             } else {
                 return reject({
                     code: -1,
-                    msg: '网络错误'
+                    msg: error
                 });
             }
-        }).catch(response => {
-            return reject({
-                code: -1,
-                msg: response
-            });
         });
     });
 };
+
+Axios.prototype.frame = null;
 
 /**
  * GET获取

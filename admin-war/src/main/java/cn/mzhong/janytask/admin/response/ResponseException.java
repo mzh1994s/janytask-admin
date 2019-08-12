@@ -1,4 +1,4 @@
-package cn.mzhong.janytask.admin.base;
+package cn.mzhong.janytask.admin.response;
 
 import java.util.ArrayList;
 import java.util.List;

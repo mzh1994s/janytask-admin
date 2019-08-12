@@ -19,7 +19,7 @@
     <div class="login_layout">
         <div class="login_form">
             <Card style="padding: 30px 30px 0 0">
-                <Form ref="loginForm" :model="loginInfo" :label-width="80">
+                <Form ref="loginForm" :model="loginInfo" :rules="loginInfoRules" :label-width="80">
                     <FormItem label="用户名" prop="user">
                         <Input type="text" v-model="loginInfo.username"></Input>
                     </FormItem>
@@ -45,26 +45,32 @@
             return {
                 verifyCodeCnt: 0,
                 loginInfo: {
-                    username: '',
-                    password: '',
+                    username: 'admin',
+                    password: 'mzh176506',
                     verifyCode: ''
+                },
+                loginInfoRules: {
+                    username: {required: true, message: '请输入用户名'},
+                    password: {required: true, message: '请输入密码'},
+                    verifyCode: [{required: true, message: '请输入验证码'}]
                 }
             }
         },
         methods: {
-            refreshVerifyCode(){
+            refreshVerifyCode() {
                 this.verifyCodeCnt++;
             },
             handleSubmit() {
-                alert(this.loginInfo.username);
-                this.$axios.post2('/', loginInfo).then(response => {
-                    console.log(response.data);
+                this.$axios.post2('/auth/login.do', this.loginInfo).then(response => {
+                    this.$emit('finished', response.data);
+                }).catch(error=>{
+                    this.$Message.error(error.msg);
                 })
             }
         },
         computed: {
-            verifyCodeUri(){
-                return "verify_code/generate.do?key=login&t=" + this.verifyCodeCnt
+            verifyCodeUri() {
+                return "verify-code/generate.do?key=login&t=" + this.verifyCodeCnt
             }
         }
     }

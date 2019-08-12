@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- 自定义授权出错处理器 -->
+    <beans:bean id="accessDeniedHandler" class="cn.mzhong.janytask.admin.auth.AccessDeniedHandler"/>
+    <!-- 认证（登录）成功处理器 -->
+    <beans:bean id="authenticationSuccessHandler" class="cn.mzhong.janytask.admin.auth.AuthenticationSuccessHandler"/>
+    <!-- 认证（登录）失败处理器 -->
+    <beans:bean id="authenticationFailureHandler" class="cn.mzhong.janytask.admin.auth.AuthenticationFailureHandler"/>
+    <!-- session失效（未登录）执行 -->
+    <beans:bean id="invalidSessionStrategy" class="cn.mzhong.janytask.admin.auth.InvalidSessionStrategy"/>
+    <!-- 未知 -->
+    <beans:bean id="sessionAuthenticationStrategy" class="cn.mzhong.janytask.admin.auth.SessionAuthenticationStrategy"/>
+    <!-- 试试 -->
+    <beans:bean id="authenticationEntryPoint" class="cn.mzhong.janytask.admin.auth.AuthenticationEntryPoint"/>
+    <!-- 验证码过滤器 -->
+    <beans:bean id="verifyCodeAuthenticationFilter"
+                class="cn.mzhong.janytask.admin.auth.VerifyCodeAuthenticationFilter">
+        <beans:constructor-arg value="auth/login.do"/>
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+    </beans:bean>
+    <!-- 配置加密的算法 -->
+    <beans:bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    <!-- 自定义User服务 -->
+    <beans:bean id="userDetailsService" class="cn.mzhong.janytask.admin.auth.UserDetailsService"/>
+
+    <!-- 不需要验证的地址 -->
+    <http pattern="/verify-code/**" security="none"/>
+    <http pattern="/initialize/**" security="none"/>
+    <http pattern="/auth/login.do" security="none"/>
+
+    <http auto-config="true" pattern="/**" entry-point-ref="authenticationEntryPoint" use-expressions="true">
+        <intercept-url pattern="/**" access="isAuthenticated()"/>
+        <custom-filter ref="verifyCodeAuthenticationFilter" before="FORM_LOGIN_FILTER"/>
+        <access-denied-handler ref="accessDeniedHandler"/>
+        <!-- session管理器 -->
+        <session-management invalid-session-strategy-ref="invalidSessionStrategy"
+                            session-authentication-strategy-ref="sessionAuthenticationStrategy"/>
+        <!-- 登录相关 -->
+        <form-login authentication-success-handler-ref="authenticationSuccessHandler"
+                    authentication-failure-handler-ref="authenticationFailureHandler"
+                    login-processing-url="auth/login.do"
+                    username-parameter="username"
+                    password-parameter="password"/>
+        <csrf disabled="true"/>
+    </http>
+
+    <authentication-manager id="authenticationManager" erase-credentials="false">
+        <authentication-provider user-service-ref="userDetailsService">
+            <password-encoder ref="bCryptPasswordEncoder"/>
+        </authentication-provider>
+    </authentication-manager>
+
+    <!-- 开启注解驱动 -->
+    <global-method-security jsr250-annotations="enabled" secured-annotations="enabled" pre-post-annotations="enabled"/>
+
+</beans:beans>

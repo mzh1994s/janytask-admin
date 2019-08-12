@@ -1,4 +1,4 @@
-package cn.mzhong.janytask.admin.center;
+package cn.mzhong.janytask.admin.base.initializer;
 
 import cn.mzhong.janytask.admin.base.po.User;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * 初始化准备数据
  */
-public class InitPrepareData implements Serializable {
+public class InitializeData implements Serializable {
     private static final long serialVersionUID = 9195984448397314223L;
     // 初始化管理员信息
     @Valid

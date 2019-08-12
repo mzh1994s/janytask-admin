@@ -1,7 +1,7 @@
-package cn.mzhong.janytask.admin.center;
+package cn.mzhong.janytask.admin.base.initializer;
 
-import cn.mzhong.janytask.admin.base.ResponseException;
-import cn.mzhong.janytask.admin.center.mapper.main.UserMapper;
+import cn.mzhong.janytask.admin.base.mapper.main.UserMapper;
+import cn.mzhong.janytask.admin.response.ResponseException;
 import cn.mzhong.janytask.admin.conf.SQLiteConfig;
 import cn.mzhong.janytask.admin.conf.SystemConfig;
 import cn.mzhong.janytask.admin.util.FileUtils;
@@ -42,7 +42,7 @@ public class BaseInitializer {
     /**
      * 初始化主数据库
      */
-    private void initializeMainDatabase(InitPrepareData prepareData) throws ResponseException {
+    private void initializeMainDatabase(InitializeData prepareData) throws ResponseException {
         try {
             FileUtils.createFile(SQLiteConfig.DB_MAIN_LOCATION);
         } catch (IOException e) {
@@ -71,7 +71,7 @@ public class BaseInitializer {
                 && mainDBInitialized();
     }
 
-    public void awaitInitialize(InitPrepareData prepareData) throws ResponseException {
+    public void awaitInitialize(InitializeData prepareData) throws ResponseException {
         // 如果已经初始化过，则不能再次初始化
         if (isInitialized()) {
             throw new ResponseException("不能重复初始化，如果需要重置管理应用程序，请删除" + SystemConfig.WORK_LOCATION);

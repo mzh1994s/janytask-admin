@@ -1,8 +1,10 @@
-package cn.mzhong.janytask.admin.common;
+package cn.mzhong.janytask.admin.base.verifycode;
 
-import cn.mzhong.janytask.admin.base.ResponseException;
+import cn.mzhong.janytask.admin.response.ResponseException;
+import cn.mzhong.janytask.admin.conf.SessionKey;
 import com.github.bingoohuang.patchca.custom.ConfigurableCaptchaService;
 import com.github.bingoohuang.patchca.utils.encoder.EncoderHelper;
+import com.github.bingoohuang.patchca.word.AdaptiveRandomWordFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +26,22 @@ public class VerifyCodeService extends ConfigurableCaptchaService {
     private static final Map<String, String> keyMap = new HashMap<>();
 
     static {
-        keyMap.put(LOGIN_KEY, "__verify_key_login");
+        keyMap.put(LOGIN_KEY, SessionKey.VERIFY_KEY_LOGIN);
     }
 
     @Autowired
     HttpSession httpSession;
+
+    public VerifyCodeService() {
+        super.width = 200;
+        this.setWordLength(4);
+    }
+
+    public void setWordLength(int length) {
+        AdaptiveRandomWordFactory adaptiveRandomWordFactory = ((AdaptiveRandomWordFactory) super.wordFactory);
+        adaptiveRandomWordFactory.setMaxLength(length);
+        adaptiveRandomWordFactory.setMinLength(length);
+    }
 
     private String sessionKey(String key) throws ResponseException {
         String sessionKey = keyMap.get(key);
@@ -49,6 +62,9 @@ public class VerifyCodeService extends ConfigurableCaptchaService {
     }
 
     public String getVerifyCode(String key) throws ResponseException {
-        return (String) httpSession.getAttribute(sessionKey(key));
+        String sessionKey = sessionKey(key);
+        String verifyCode = (String) httpSession.getAttribute(sessionKey);
+        httpSession.removeAttribute(sessionKey);
+        return verifyCode;
     }
 }

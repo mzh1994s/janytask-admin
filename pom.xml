@@ -12,6 +12,7 @@
 
     <properties>
         <spring.version>5.1.8.RELEASE</spring.version>
+        <security.version>5.1.6.RELEASE</security.version>
     </properties>
 
     <dependencyManagement>
@@ -39,6 +40,18 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <version>6.0.9.Final</version>
+            </dependency>
+
+            <!-- 权限 -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
+                <version>${security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+                <version>${security.version}</version>
             </dependency>
 
             <!-- 日志 -->

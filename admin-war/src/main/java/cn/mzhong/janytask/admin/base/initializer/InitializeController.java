@@ -1,8 +1,7 @@
-package cn.mzhong.janytask.admin.center;
+package cn.mzhong.janytask.admin.base.initializer;
 
-import cn.mzhong.janytask.admin.base.ResponseException;
-import cn.mzhong.janytask.admin.base.ResponseInfo;
-import cn.mzhong.janytask.admin.base.po.User;
+import cn.mzhong.janytask.admin.response.ResponseException;
+import cn.mzhong.janytask.admin.response.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@RequestMapping(value = "center")
+@RequestMapping(value = "/initialize")
 @RestController
-public class CenterController {
+public class InitializeController {
 
     @Autowired
     BaseInitializer initializer;
@@ -24,7 +23,7 @@ public class CenterController {
     }
 
     @RequestMapping(value = "awaitInitialize", method = RequestMethod.POST)
-    public ResponseInfo awaitInitialize(@RequestBody @Valid InitPrepareData prepareData) throws ResponseException {
+    public ResponseInfo awaitInitialize(@RequestBody @Valid InitializeData prepareData) throws ResponseException {
         if (!initializer.isInitialized()) {
             initializer.awaitInitialize(prepareData);
         }

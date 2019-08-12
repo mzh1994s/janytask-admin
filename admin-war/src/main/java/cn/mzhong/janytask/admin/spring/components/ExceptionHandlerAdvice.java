@@ -1,13 +1,12 @@
 package cn.mzhong.janytask.admin.spring.components;
 
-import cn.mzhong.janytask.admin.base.ResponseException;
-import cn.mzhong.janytask.admin.base.ResponseInfo;
+import cn.mzhong.janytask.admin.response.ResponseException;
+import cn.mzhong.janytask.admin.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
