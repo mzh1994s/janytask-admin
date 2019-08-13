@@ -111,7 +111,8 @@
                     }
                     // 已初始化
                     else {
-                        this.$axios.get('user/current').then(response => {
+                        this.$axios.get('user/current.json').then(response => {
+                            this.isUnauthorized = false;
                             this.status = 2;
                         }).catch(error => {
                             if (error.code === -401) {
@@ -136,7 +137,6 @@
                 this.status = 2;
             },
             handleLoginFinished(userInfo) {
-                console.log(userInfo);
                 this.isUnauthorized = false;
             }
         }
