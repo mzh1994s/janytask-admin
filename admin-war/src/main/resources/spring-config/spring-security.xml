@@ -17,7 +17,7 @@
     <beans:bean id="invalidSessionStrategy" class="cn.mzhong.janytask.admin.auth.InvalidSessionStrategy"/>
     <!-- 未登录跳转点 -->
     <beans:bean id="authenticationEntryPoint" class="cn.mzhong.janytask.admin.auth.AuthenticationEntryPoint"/>
-    <!-- 前置验证过滤器 -->
+    <!-- 登录前置验证过滤器 -->
     <beans:bean id="preValidateAuthenticationFilter"
                 class="cn.mzhong.janytask.admin.auth.PreValidateAuthenticationFilter">
         <beans:constructor-arg value="/auth/login.do"/>
@@ -45,7 +45,7 @@
           use-expressions="true">
 
         <custom-filter ref="preValidateAuthenticationFilter" before="FORM_LOGIN_FILTER"/>
-        <intercept-url pattern="/**" access="isAuthenticated"/>
+        <intercept-url pattern="/**" access="isAuthenticated()"/>
         <access-denied-handler ref="accessDeniedHandler"/>
         <!-- session管理器 -->
         <session-management invalid-session-strategy-ref="invalidSessionStrategy">
@@ -57,7 +57,7 @@
                     login-processing-url="/auth/login.do"
                     username-parameter="username"
                     password-parameter="password"/>
-        <remember-me key="__dadf1dd232323"/>
+        <remember-me key="__dadf1dd232323" token-validity-seconds="1209600"/>
         <csrf disabled="true"/>
     </http>
 
