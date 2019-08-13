@@ -1,9 +1,12 @@
 package cn.mzhong.janytask.admin.base.po;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class User implements Serializable {
     private static final long serialVersionUID = -662193657145303863L;
 
