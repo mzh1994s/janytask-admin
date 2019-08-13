@@ -1,4 +1,5 @@
 import axios from 'axios';
+import querystring from 'querystring';
 
 function Axios(options) {
     return new Promise(function (resolve, reject) {
@@ -7,22 +8,17 @@ function Axios(options) {
             if (rInfo.code >= 0) {
                 return resolve(rInfo);
             } else {
+                if (rInfo.code === -401 && window.__vueFrame != null) {
+                    window.__vueFrame.isUnauthorized = true;
+                }
                 return reject(rInfo);
             }
         }).catch(error => {
             let response = error.response;
-            if (response.status === 403 && window.__vueFrame != null) {
-                window.__vueFrame.isUnauthorized = true;
-                return reject({
-                    code: -403,
-                    msg: '未登录！',
-                });
-            } else {
-                return reject({
-                    code: -1,
-                    msg: error
-                });
-            }
+            return reject({
+                code: -response.status,
+                msg: error.message
+            });
         });
     });
 };
@@ -51,7 +47,9 @@ Axios.post = function (url, data, options) {
     let internalOptions = options || {};
     internalOptions.url = url;
     internalOptions.method = 'POST';
-    internalOptions.data = data;
+    internalOptions.headers = internalOptions.headers || {};
+    internalOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    internalOptions.data = querystring.stringify(data);
     return Axios(internalOptions);
 }
 

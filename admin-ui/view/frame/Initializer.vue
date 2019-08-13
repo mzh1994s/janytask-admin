@@ -125,7 +125,7 @@
             handleInitialize() {
                 this.step = 2
                 this.isSubmitting = true;
-                this.$axios.post2('center/awaitInitialize.json', this.prepareData).then(response => {
+                this.$axios.post2('initialize/awaitInitialize.json', this.prepareData).then(response => {
                     // do nothing
                 }).catch(error => {
                     this.error = error.msg;

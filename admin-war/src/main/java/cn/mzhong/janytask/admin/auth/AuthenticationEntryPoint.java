@@ -1,5 +1,7 @@
 package cn.mzhong.janytask.admin.auth;
 
+import cn.mzhong.janytask.admin.response.ResponseInfo;
+import cn.mzhong.janytask.admin.response.ResponseUtils;
 import org.springframework.security.core.AuthenticationException;
 
 import javax.servlet.ServletException;
@@ -10,6 +12,6 @@ import java.io.IOException;
 public class AuthenticationEntryPoint implements org.springframework.security.web.AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
-        response.sendError(403, e.getLocalizedMessage());
+        ResponseUtils.write(response, ResponseInfo.error(-401, e.getLocalizedMessage()));
     }
 }

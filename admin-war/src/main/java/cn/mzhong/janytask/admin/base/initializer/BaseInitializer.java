@@ -1,11 +1,13 @@
 package cn.mzhong.janytask.admin.base.initializer;
 
 import cn.mzhong.janytask.admin.base.mapper.main.UserMapper;
+import cn.mzhong.janytask.admin.base.po.User;
 import cn.mzhong.janytask.admin.response.ResponseException;
 import cn.mzhong.janytask.admin.conf.SQLiteConfig;
 import cn.mzhong.janytask.admin.conf.SystemConfig;
 import cn.mzhong.janytask.admin.util.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -20,6 +22,9 @@ public class BaseInitializer {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * 初始化数据目录，此操作会在USER.HOME目录下创建一个.janytask_admin文件夹。
@@ -50,7 +55,10 @@ public class BaseInitializer {
         }
         // User表
         userMapper.createTable();
-        userMapper.insert(prepareData.getAdmin());
+        User admin = prepareData.getAdmin();
+        // 密码加密后入库
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        userMapper.insert(admin);
     }
 
     private boolean mainDBInitialized() {

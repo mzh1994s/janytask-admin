@@ -1,7 +1,5 @@
-package cn.mzhong.janytask.admin.spring.components;
+package cn.mzhong.janytask.admin.response;
 
-import cn.mzhong.janytask.admin.response.ResponseException;
-import cn.mzhong.janytask.admin.response.ResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
@@ -14,9 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.List;
 
 @RestControllerAdvice
-public class ExceptionHandlerAdvice {
+public class ResponseExceptionHandlerAdvice {
 
-    Logger Log = LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
+    Logger Log = LoggerFactory.getLogger(ResponseExceptionHandlerAdvice.class);
 
     private String resolveErrorMessage(Errors errors) {
         List<FieldError> fieldErrors = errors.getFieldErrors();

@@ -29,9 +29,6 @@ public class VerifyCodeService extends ConfigurableCaptchaService {
         keyMap.put(LOGIN_KEY, SessionKey.VERIFY_KEY_LOGIN);
     }
 
-    @Autowired
-    HttpSession httpSession;
-
     public VerifyCodeService() {
         super.width = 200;
         this.setWordLength(4);
@@ -51,7 +48,7 @@ public class VerifyCodeService extends ConfigurableCaptchaService {
         return sessionKey;
     }
 
-    public void writeVerifyCode(String key, OutputStream out) throws ResponseException {
+    public void writeVerifyCode(HttpSession httpSession, String key, OutputStream out) throws ResponseException {
         String sessionKey = sessionKey(key);
         try {
             httpSession.setAttribute(sessionKey, EncoderHelper.getChallangeAndWriteImage(this, "png", out));
@@ -61,7 +58,7 @@ public class VerifyCodeService extends ConfigurableCaptchaService {
         }
     }
 
-    public String getVerifyCode(String key) throws ResponseException {
+    public String getVerifyCode(HttpSession httpSession, String key) throws ResponseException {
         String sessionKey = sessionKey(key);
         String verifyCode = (String) httpSession.getAttribute(sessionKey);
         httpSession.removeAttribute(sessionKey);

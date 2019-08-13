@@ -12,8 +12,19 @@ public class ResponseException extends Exception {
         super("未知异常！");
     }
 
+    public ResponseException(int code) {
+        super("未知异常！");
+        this.code = code;
+    }
+
+
     public ResponseException(String message) {
         super(message);
+    }
+
+    public ResponseException(int code, String message) {
+        super(message);
+        this.code = code;
     }
 
     public ResponseException(String message, Throwable cause) {

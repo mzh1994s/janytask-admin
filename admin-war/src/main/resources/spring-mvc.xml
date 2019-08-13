@@ -9,7 +9,7 @@
 
     <mvc:annotation-driven validator="validator"/>
 
-    <bean id="validator" class="cn.mzhong.janytask.admin.spring.components.HibernateValidationFactoryBean"/>
+    <bean id="validator" class="cn.mzhong.janytask.admin.validate.HibernateValidationFactoryBean"/>
 
     <context:component-scan base-package="cn.mzhong.janytask.admin">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>

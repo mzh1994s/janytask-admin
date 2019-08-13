@@ -3,18 +3,20 @@ package cn.mzhong.janytask.admin.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @SuppressWarnings("ALL")
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class ResponseInfo implements Serializable {
     private static final long serialVersionUID = -7165330465816791059L;
     protected int code;
     protected Serializable data;
     protected String msg;
-    protected List<String> details;
+    protected Set<String> details = new HashSet<>();
 
-    public ResponseInfo() {
+    private ResponseInfo() {
     }
 
     public ResponseInfo(int code, Serializable data) {
@@ -22,42 +24,51 @@ public class ResponseInfo implements Serializable {
         this.data = data;
     }
 
-    public ResponseInfo(int code, String message, List<String> details) {
+    public ResponseInfo(int code, String message, Collection<String> details) {
         this.code = code;
         this.msg = message;
-        this.details = details;
+        this.details.addAll(details);
     }
 
     public int getCode() {
         return code;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
     public <T extends Serializable> T getData() {
         return (T) data;
-    }
-
-    public void setData(Serializable data) {
-        this.data = data;
     }
 
     public String getMsg() {
         return msg;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public List<String> getDetails() {
+    public Set<String> getDetails() {
         return details;
     }
 
-    public void setDetails(List<String> details) {
-        this.details = details;
+    public ResponseInfo code(int code) {
+        this.code = code;
+        return this;
+    }
+
+    public ResponseInfo data(Serializable data) {
+        this.data = data;
+        return this;
+    }
+
+    public ResponseInfo msg(String msg) {
+        this.msg = msg;
+        return this;
+    }
+
+    public ResponseInfo details(Collection<String> details) {
+        this.details.addAll(details);
+        return this;
+    }
+
+    public ResponseInfo detail(String detail) {
+        this.details.add(detail);
+        return this;
     }
 
     public static ResponseInfo success(Serializable data) {
@@ -75,11 +86,20 @@ public class ResponseInfo implements Serializable {
         return rInfo;
     }
 
+    public static ResponseInfo error(int code, String message) {
+        ResponseInfo rInfo = new ResponseInfo();
+        rInfo.code = code;
+        rInfo.msg = message;
+        return rInfo;
+    }
+
     public static ResponseInfo error(ResponseException responseException) {
         ResponseInfo rInfo = new ResponseInfo();
         rInfo.code = responseException.getCode();
         rInfo.msg = responseException.getLocalizedMessage();
-        rInfo.details = responseException.getDetails();
+        if (responseException.getDetails() != null) {
+            rInfo.details.addAll(responseException.getDetails());
+        }
         return rInfo;
     }
 

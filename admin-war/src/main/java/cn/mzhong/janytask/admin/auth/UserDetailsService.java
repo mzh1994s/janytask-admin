@@ -19,11 +19,10 @@ public class UserDetailsService implements org.springframework.security.core.use
         if (selectOne == null) {
             throw new UsernameNotFoundException("用户" + username + "不存在");
         }
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+        return new org.springframework.security.core.userdetails.User(
                 selectOne.getUsername(),
                 selectOne.getPassword(),
                 new ArrayList<>()
         );
-        return userDetails;
     }
 }

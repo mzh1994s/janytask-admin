@@ -61,9 +61,12 @@
                 this.verifyCodeCnt++;
             },
             handleSubmit() {
-                this.$axios.post2('/auth/login.do', this.loginInfo).then(response => {
+                this.$axios.post('/auth/login.do', this.loginInfo).then(response => {
                     this.$emit('finished', response.data);
-                }).catch(error=>{
+                }).catch(error => {
+                    if (error.code === -401) {
+                        this.refreshVerifyCode();
+                    }
                     this.$Message.error(error.msg);
                 })
             }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Objects;
 
@@ -22,11 +23,14 @@ public class AuthorizationController {
     @Autowired
     AuthService authService;
 
+    @Autowired
+    HttpSession httpSession;
+
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseInfo login(@RequestBody @Valid LoginInfo loginInfo) throws ResponseException {
-        String verifyCode = verifyCodeService.getVerifyCode(VerifyCodeService.LOGIN_KEY);
+        String verifyCode = verifyCodeService.getVerifyCode(httpSession, VerifyCodeService.LOGIN_KEY);
         if (!Objects.equals(loginInfo.getVerifyCode(), verifyCode)) {
-            throw new ResponseException("输入验证码错误！");
+            throw new ResponseException(-2, "输入验证码错误！");
         }
         // 登录成功将继续，否则抛出异常！
         authService.login(loginInfo.getUsername(), loginInfo.getPassword());

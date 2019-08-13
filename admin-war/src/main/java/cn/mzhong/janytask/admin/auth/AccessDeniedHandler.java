@@ -1,5 +1,7 @@
 package cn.mzhong.janytask.admin.auth;
 
+import cn.mzhong.janytask.admin.response.ResponseInfo;
+import cn.mzhong.janytask.admin.response.ResponseUtils;
 import org.springframework.security.access.AccessDeniedException;
 
 import javax.servlet.ServletException;
@@ -11,6 +13,6 @@ public class AccessDeniedHandler implements org.springframework.security.web.acc
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
-        response.sendError(401, e.getLocalizedMessage());
+        ResponseUtils.write(response, ResponseInfo.error(-403, e.getLocalizedMessage()));
     }
 }

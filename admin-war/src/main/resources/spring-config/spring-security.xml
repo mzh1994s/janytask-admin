@@ -15,46 +15,54 @@
     <beans:bean id="authenticationFailureHandler" class="cn.mzhong.janytask.admin.auth.AuthenticationFailureHandler"/>
     <!-- session失效（未登录）执行 -->
     <beans:bean id="invalidSessionStrategy" class="cn.mzhong.janytask.admin.auth.InvalidSessionStrategy"/>
-    <!-- 未知 -->
-    <beans:bean id="sessionAuthenticationStrategy" class="cn.mzhong.janytask.admin.auth.SessionAuthenticationStrategy"/>
-    <!-- 试试 -->
+    <!-- 未登录跳转点 -->
     <beans:bean id="authenticationEntryPoint" class="cn.mzhong.janytask.admin.auth.AuthenticationEntryPoint"/>
-    <!-- 验证码过滤器 -->
-    <beans:bean id="verifyCodeAuthenticationFilter"
-                class="cn.mzhong.janytask.admin.auth.VerifyCodeAuthenticationFilter">
-        <beans:constructor-arg value="auth/login.do"/>
-        <beans:property name="authenticationManager" ref="authenticationManager"/>
+    <!-- 前置验证过滤器 -->
+    <beans:bean id="preValidateAuthenticationFilter"
+                class="cn.mzhong.janytask.admin.auth.PreValidateAuthenticationFilter">
+        <beans:constructor-arg value="/auth/login.do"/>
     </beans:bean>
     <!-- 配置加密的算法 -->
     <beans:bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
     <!-- 自定义User服务 -->
     <beans:bean id="userDetailsService" class="cn.mzhong.janytask.admin.auth.UserDetailsService"/>
+    <!-- 自定义Provider -->
+    <beans:bean id="daoAuthenticationProvider"
+                class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <beans:property name="hideUserNotFoundExceptions" value="false"/>
+        <beans:property name="passwordEncoder" ref="bCryptPasswordEncoder"/>
+        <beans:property name="userDetailsService" ref="userDetailsService"/>
+    </beans:bean>
 
     <!-- 不需要验证的地址 -->
     <http pattern="/verify-code/**" security="none"/>
     <http pattern="/initialize/**" security="none"/>
-    <http pattern="/auth/login.do" security="none"/>
+    <http pattern="/favicon.ico" security="none"/>
 
-    <http auto-config="true" pattern="/**" entry-point-ref="authenticationEntryPoint" use-expressions="true">
-        <intercept-url pattern="/**" access="isAuthenticated()"/>
-        <custom-filter ref="verifyCodeAuthenticationFilter" before="FORM_LOGIN_FILTER"/>
+    <http pattern="/**"
+          entry-point-ref="authenticationEntryPoint"
+          authentication-manager-ref="authenticationManager"
+          use-expressions="true">
+
+        <custom-filter ref="preValidateAuthenticationFilter" before="FORM_LOGIN_FILTER"/>
+        <intercept-url pattern="/**" access="isAuthenticated"/>
         <access-denied-handler ref="accessDeniedHandler"/>
         <!-- session管理器 -->
-        <session-management invalid-session-strategy-ref="invalidSessionStrategy"
-                            session-authentication-strategy-ref="sessionAuthenticationStrategy"/>
+        <session-management invalid-session-strategy-ref="invalidSessionStrategy">
+            <concurrency-control max-sessions="1"/>
+        </session-management>
         <!-- 登录相关 -->
         <form-login authentication-success-handler-ref="authenticationSuccessHandler"
                     authentication-failure-handler-ref="authenticationFailureHandler"
-                    login-processing-url="auth/login.do"
+                    login-processing-url="/auth/login.do"
                     username-parameter="username"
                     password-parameter="password"/>
+        <remember-me key="__dadf1dd232323"/>
         <csrf disabled="true"/>
     </http>
 
     <authentication-manager id="authenticationManager" erase-credentials="false">
-        <authentication-provider user-service-ref="userDetailsService">
-            <password-encoder ref="bCryptPasswordEncoder"/>
-        </authentication-provider>
+        <authentication-provider ref="daoAuthenticationProvider"/>
     </authentication-manager>
 
     <!-- 开启注解驱动 -->

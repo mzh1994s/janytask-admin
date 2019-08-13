@@ -1,5 +1,7 @@
 package cn.mzhong.janytask.admin.auth;
 
+import cn.mzhong.janytask.admin.response.ResponseInfo;
+import cn.mzhong.janytask.admin.response.ResponseUtils;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.ServletException;
@@ -11,6 +13,6 @@ public class AuthenticationSuccessHandler implements org.springframework.securit
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        System.out.println("登录成功！");
+        ResponseUtils.write(response, ResponseInfo.success("登录成功！"));
     }
 }

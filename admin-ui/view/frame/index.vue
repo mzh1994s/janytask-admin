@@ -111,15 +111,20 @@
                     }
                     // 已初始化
                     else {
-                        this.status = 2;
+                        this.$axios.get('user/current').then(response => {
+                            this.status = 2;
+                        }).catch(error => {
+                            if (error.code === -401) {
+                                this.status = 2;
+                            } else {
+                                this.status = -1
+                                this.msg = error.msg;
+                            }
+                        });
                     }
                 }).catch(error => {
-                    if (error.code === -403) {
-                        this.status = 2;
-                    } else {
-                        this.status = -1;
-                        this.msg = error.msg;
-                    }
+                    this.status = -1;
+                    this.msg = error.msg;
                 }
             );
         },

@@ -1,4 +1,4 @@
-package cn.mzhong.janytask.admin.spring.components;
+package cn.mzhong.janytask.admin.validate;
 
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
@@ -8,8 +8,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 public class HibernateValidationFactoryBean extends SpringValidatorAdapter {
-
-    private volatile Validator validator;
 
     public HibernateValidationFactoryBean() {
         super(getValidator());

@@ -23,13 +23,10 @@ public class VerifyCodeController {
     @Autowired
     VerifyCodeService verifyCodeService;
 
-    @Autowired
-    HttpSession httpSession;
-
     @RequestMapping(value = "generate", params = {"key"})
-    public ResponseEntity<byte[]> generateVerifyCode(String key) throws ResponseException {
+    public ResponseEntity<byte[]> generateVerifyCode(HttpSession httpSession, String key) throws ResponseException {
         ByteArrayOutputStream captchaOutputStream = new ByteArrayOutputStream();
-        verifyCodeService.writeVerifyCode(key, captchaOutputStream);
+        verifyCodeService.writeVerifyCode(httpSession, key, captchaOutputStream);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_PNG);
         httpHeaders.setCacheControl("no-cache");
