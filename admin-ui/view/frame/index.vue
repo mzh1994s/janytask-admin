@@ -1,6 +1,24 @@
 <style>
-    .demo-spin-icon-load {
-        animation: ani-demo-spin 1s linear infinite;
+    .layout{
+        border: 1px solid #d7dde4;
+        background: #f5f7f9;
+        position: relative;
+        overflow: hidden;
+    }
+    .layout-logo{
+        width: 100px;
+        height: 30px;
+        background: #5b6270;
+        border-radius: 3px;
+        float: left;
+        position: relative;
+        top: 15px;
+        left: 20px;
+    }
+    .layout-nav{
+        width: 100px;
+        margin: 0 auto;
+        margin-right: 20px;
     }
 </style>
 <template>
@@ -18,27 +36,20 @@
         <div v-else class="layout">
             <Layout>
                 <Header>
-                    <Menu mode="horizontal" theme="dark" active-name="1">
-                        <div class="layout-logo"></div>
-                        <div class="layout-nav">
-                            <MenuItem name="1">
-                                <Icon type="ios-navigate"></Icon>
-                                Item 1
-                            </MenuItem>
-                            <MenuItem name="2">
-                                <Icon type="ios-keypad"></Icon>
-                                Item 2
-                            </MenuItem>
-                            <MenuItem name="3">
-                                <Icon type="ios-analytics"></Icon>
-                                Item 3
-                            </MenuItem>
-                            <MenuItem name="4">
-                                <Icon type="ios-paper"></Icon>
-                                Item 4
-                            </MenuItem>
-                        </div>
-                    </Menu>
+                    <div class="layout-logo"></div>
+                    <div class="layout-nav">
+                        <Avatar style="background-color: #87d068; margin-right:10px;" icon="ios-person" />
+                        <Dropdown @on-click="handleUserAction">
+                            <a style="color: #ffffff;" href="javascript:void(0)">
+                                <span>{{user.name || user.username}}</span>
+                                <Icon type="ios-arrow-down"></Icon>
+                            </a>
+                            <DropdownMenu slot="list">
+                                <DropdownItem name="USER_ZONE">用户中心</DropdownItem>
+                                <DropdownItem name="USER_LOGOUT">用户登出</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </div>
                 </Header>
                 <Layout>
                     <Sider hide-trigger :style="{background: '#fff'}">
@@ -98,7 +109,8 @@
             return {
                 status: 0,
                 msg: '正在初始化...',
-                isUnauthorized: true
+                isUnauthorized: true,
+                user: null,
             }
         },
         created() {
@@ -112,6 +124,7 @@
                     // 已初始化
                     else {
                         this.$axios.get('user/current.json').then(response => {
+                            this.user = response.data;
                             this.isUnauthorized = false;
                             this.status = 2;
                         }).catch(error => {
@@ -137,7 +150,22 @@
                 this.status = 2;
             },
             handleLoginFinished(userInfo) {
+                this.user = userInfo;
                 this.isUnauthorized = false;
+            },
+            handleLogout(){
+                this.$axios.post('auth/logout.do').then(response=>{
+                    this.isUnauthorized = true;
+                }).catch(error=>{
+                    this.$Message.error(error.msg);
+                }).finally(()=>{
+
+                });
+            },
+            handleUserAction(name){
+                if(name === 'USER_LOGOUT'){
+                    this.handleLogout();
+                }
             }
         }
     }

@@ -67,7 +67,7 @@ public class PreValidateAuthenticationFilter extends GenericFilterBean {
             try {
                 this.doFilter(httpServletRequest, httpServletResponse);
             } catch (IllegalArgumentException e) {
-                ResponseUtils.write(httpServletResponse, ResponseInfo.error(-401, e.getLocalizedMessage()));
+                ResponseUtils.write(httpServletResponse, ResponseInfo.error(-403, e.getLocalizedMessage()));
                 return;
             }
         }

@@ -22,6 +22,8 @@
                 class="cn.mzhong.janytask.admin.auth.PreValidateAuthenticationFilter">
         <constructor-arg value="/auth/login.do"/>
     </bean>
+    <!-- 登出成功处理器 -->
+    <bean id="logoutSuccessHandler" class="cn.mzhong.janytask.admin.auth.LogoutSuccessHandler"/>
     <!-- 配置加密的算法 -->
     <bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
     <!-- 自定义User服务 -->
@@ -57,6 +59,7 @@
                     login-processing-url="/auth/login.do"
                     username-parameter="username"
                     password-parameter="password"/>
+        <security:logout logout-url="/auth/logout.do" success-handler-ref="logoutSuccessHandler" />
         <security:remember-me key="__dadf1dd232323" token-validity-seconds="1209600"/>
         <security:csrf disabled="true"/>
     </security:http>

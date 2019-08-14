@@ -64,7 +64,7 @@
                 this.$axios.post('/auth/login.do', this.loginInfo).then(response => {
                     this.$emit('finished', response.data);
                 }).catch(error => {
-                    if (error.code === -401) {
+                    if (error.code === -403) {
                         this.refreshVerifyCode();
                     }
                     this.$Message.error(error.msg);
