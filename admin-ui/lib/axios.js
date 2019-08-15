@@ -9,7 +9,7 @@ function Axios(options) {
                 return resolve(rInfo);
             } else {
                 if (rInfo.code === -401 && window.__vueFrame != null) {
-                    window.__vueFrame.isUnauthorized = true;
+                    window.__vueFrame.status = 1;
                 }
                 return reject(rInfo);
             }
@@ -22,8 +22,6 @@ function Axios(options) {
         });
     });
 };
-
-Axios.prototype.frame = null;
 
 /**
  * GET获取

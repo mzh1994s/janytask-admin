@@ -1,0 +1,39 @@
+/** 消息、错误 */
+.message-card {
+    position: fixed;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 600px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.message-card > div {
+    width: 100%;
+}
+
+.message-wrap {
+    text-align: center;
+}
+
+.message-error-icon, .message-success-icon {
+    font-size: 80px;
+}
+
+.message-error-icon {
+    color: #F56C6C;
+}
+
+.message-success-icon {
+    color: #67C23A;
+}
+
+.message-text {
+    display: block;
+    margin: 10px 0;
+}

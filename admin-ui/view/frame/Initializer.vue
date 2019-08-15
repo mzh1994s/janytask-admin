@@ -4,75 +4,57 @@
         height: 100%;
     }
 
-    .login_form {
-        position: fixed;
+    .step_1 {
         width: 400px;
-        height: 430px;
-        margin: auto;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        height: 450px;
     }
 
-    .base-card{
-        width: 400px;
-        min-height: 200px;
-        text-align: center;
-    }
-
-    .demo-spin-icon-load {
-        animation: ani-demo-spin 1s linear infinite;
-    }
-    .info-container{
-        text-align: center; padding: 20px;
+    .step_2 {
+        width: 600px;
+        height: 300px;
     }
 </style>
 <template>
     <div class="initialize_layout">
-        <div v-if="step==1" class="login_form">
-            <Card class="base-card">
-                <Alert type="warning">此账号为您的管理员账号，请牢记！</Alert>
-                <Form ref="adminForm" :model="prepareData.admin" :rules="userValidation" :label-width="80"
-                      style="margin: 20px 10px 0 0;">
-                    <FormItem label="电子邮箱" prop="email">
-                        <Input type="text" v-model="prepareData.admin.email"></Input>
-                    </FormItem>
-                    <FormItem label="用户名" prop="username">
-                        <Input type="text" v-model="prepareData.admin.username"></Input>
-                    </FormItem>
-                    <FormItem label="昵称" prop="name">
-                        <Input type="text" v-model="prepareData.admin.name"></Input>
-                    </FormItem>
-                    <FormItem label="密码" prop="password">
-                        <Input type="password" v-model="prepareData.admin.password"></Input>
-                    </FormItem>
-                    <FormItem label="确认密码" prop="passwordCheck">
-                        <Input type="password" v-model="prepareData.admin.passwordCheck"></Input>
-                    </FormItem>
-                </Form>
-                <Button type="primary" @click="handleStep1()">下一步</Button>
-            </Card>
-        </div>
-        <div v-if="step==2" class="login_form">
-            <Card class="base-card">
-                <Spin fix v-if="isSubmitting">
-                    <Icon type="ios-loading" size=30 class="demo-spin-icon-load"></Icon>
-                    <div style="margin-top: 20px;">初始化进行中...</div>
-                </Spin>
-                <div v-else-if="error!=null" class="info-container">
-                    <Icon type="ios-close-circle" size="40" color="#ff0000"/>
-                    <p style="margin-top: 20px;">错误：{{error}}</p>
-                    <Button type="primary" @click="handleInitialize()" style="margin-top: 20px;">重&nbsp;&nbsp;&nbsp;&nbsp;试</Button>
-                    <Button @click="handleToStep(-1)" style="margin-top: 20px;">上一步</Button>
-                </div>
-                <div v-else class="info-container">
-                    <Icon type="md-checkmark-circle" size="40" color="#ff0000"/>
-                    <p style="margin-top: 20px;">恭喜，所有初始化项均已初始化完成，请开始您的任务监控之旅！</p>
-                    <Button type="primary" @click="handleFinish()" style="margin-top: 20px;">前往登录</Button>
-                </div>
-            </Card>
-        </div>
+        <el-card v-if="step===1" class="step_1 message-card">
+            <div class="message-wrap">
+                <el-alert type="warning" :closable="false">此账号为您的管理员账号，请牢记！</el-alert><br>
+                <el-form ref="adminForm" :model="prepareData.admin" :rules="userValidation" label-width="80px">
+                    <el-form-item label="电子邮箱" prop="email">
+                        <el-input type="text" v-model="prepareData.admin.email"></el-input>
+                    </el-form-item>
+                    <el-form-item label="用户名" prop="username">
+                        <el-input type="text" v-model="prepareData.admin.username"></el-input>
+                    </el-form-item>
+                    <el-form-item label="昵称" prop="name">
+                        <el-input type="text" v-model="prepareData.admin.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码" prop="password">
+                        <el-input type="password" v-model="prepareData.admin.password"></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码" prop="passwordCheck">
+                        <el-input type="password" v-model="prepareData.admin.passwordCheck"></el-input>
+                    </el-form-item>
+                </el-form>
+                <el-button type="primary" @click="handleStep1()">下一步</el-button>
+            </div>
+        </el-card>
+        <el-card v-else-if="step===2" class="step_2 message-card" v-loading="isSubmitting"
+                 element-loading-text="初始化进行中...">
+            <div v-if="!isSubmitting" class="message-wrap">
+                <template v-if="isError">
+                    <i class="el-icon-circle-close message-error-icon"/>
+                    <p class="message-text">错误：{{message}}</p>
+                    <el-button type="primary" @click="handleInitialize()" style="margin-top: 20px;">重&nbsp;&nbsp;&nbsp;&nbsp;试</el-button>
+                    <el-button @click="handleToStep(-1)" style="margin-top: 20px;">上一步</el-button>
+                </template>
+                <template v-else>
+                    <i class="el-icon-circle-check message-success-icon"/>
+                    <p class="message-text">恭喜，所有初始化项均已初始化完成，请开始您的任务监控之旅！</p>
+                    <el-button type="primary" @click="handleFinish()" style="margin-top: 20px;">前往登录</el-button>
+                </template>
+            </div>
+        </el-card>
     </div>
 </template>
 <script>
@@ -119,16 +101,17 @@
                     }
                 });
             },
-            handleToStep(rel = 1){
+            handleToStep(rel = 1) {
                 this.step = this.step + rel;
             },
             handleInitialize() {
                 this.step = 2
                 this.isSubmitting = true;
                 this.$axios.post2('initialize/awaitInitialize.json', this.prepareData).then(response => {
-                    // do nothing
+                    this.isError = false;
                 }).catch(error => {
-                    this.error = error.msg;
+                    this.isError = true;
+                    this.message = error.msg;
                 }).finally(() => {
                     this.isSubmitting = false;
                 });

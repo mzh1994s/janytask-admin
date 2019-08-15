@@ -5,44 +5,37 @@
     }
 
     .login_form {
-        position: fixed;
         width: 400px;
-        height: 300px;
-        margin: auto;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        height: 400px;
     }
 </style>
 <template>
     <div class="login_layout">
-        <div class="login_form">
-            <Card style="padding: 30px 30px 0 0">
-                <Form ref="loginForm" :model="loginInfo" :rules="loginInfoRules" :label-width="80">
-                    <FormItem label="用户名" prop="user">
-                        <Input type="text" v-model="loginInfo.username"></Input>
-                    </FormItem>
-                    <FormItem label="密码" prop="password">
-                        <Input type="password" v-model="loginInfo.password"></Input>
-                    </FormItem>
-                    <FormItem label="验证码" prop="verifyCode">
-                        <Input type="text" v-model="loginInfo.verifyCode" number></Input>
+        <el-card v-loading="isSubmitting" element-loading-text="登录中..." class="message-card login_form">
+            <div class="message-wrap">
+                <el-form ref="loginForm" :model="loginInfo" :rules="loginInfoRules" label-width="70px">
+                    <el-form-item label="用户名" prop="user">
+                        <el-input type="text" v-model="loginInfo.username"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码" prop="password">
+                        <el-input type="password" v-model="loginInfo.password"></el-input>
+                    </el-form-item>
+                    <el-form-item label="验证码" prop="verifyCode">
+                        <el-input type="text" v-model="loginInfo.verifyCode" number></el-input>
                         <img :src="verifyCodeUri" alt="验证码"/>
-                        <a @click="refreshVerifyCode()">看不清</a>
-                    </FormItem>
-                    <FormItem>
-                        <Button type="primary" @click="handleSubmit()" long>登录</Button>
-                    </FormItem>
-                </Form>
-            </Card>
-        </div>
+                        <a @click="refreshVerifyCode()" style="cursor: pointer;">看不清</a>
+                    </el-form-item>
+                </el-form>
+                <el-button type="primary" @click="handleSubmit()" style="width:80%;">登录</el-button>
+            </div>
+        </el-card>
     </div>
 </template>
 <script>
     export default {
         data() {
             return {
+                isSubmitting: false,
                 verifyCodeCnt: 0,
                 loginInfo: {
                     username: 'admin',
@@ -61,6 +54,7 @@
                 this.verifyCodeCnt++;
             },
             handleSubmit() {
+                this.isSubmitting = true;
                 this.$axios.post('/auth/login.do', this.loginInfo).then(response => {
                     this.$emit('finished', response.data);
                 }).catch(error => {
@@ -68,6 +62,8 @@
                         this.refreshVerifyCode();
                     }
                     this.$Message.error(error.msg);
+                }).finally(() => {
+                    this.isSubmitting = false;
                 })
             }
         },

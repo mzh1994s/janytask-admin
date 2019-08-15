@@ -1,11 +1,12 @@
 <style>
-    .layout{
+    .layout {
         border: 1px solid #d7dde4;
         background: #f5f7f9;
         position: relative;
         overflow: hidden;
     }
-    .layout-logo{
+
+    .layout-logo {
         width: 100px;
         height: 30px;
         background: #5b6270;
@@ -15,98 +16,62 @@
         top: 15px;
         left: 20px;
     }
-    .layout-nav{
+
+    .layout-nav {
         width: 100px;
         margin: 0 auto;
         margin-right: 20px;
     }
+
+    .status__1 {
+        position: fixed;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .status__1 {
+        height: 400px;
+    }
 </style>
 <template>
-    <div v-if="status==0">
-        <InitializeView @finished="handleInitializeFinished"></InitializeView>
+    <el-card v-if="status===-1" v-loading="!isError" class="status__1 message-card" :element-loading-text="message">
+        <div v-if="isError" class="message-wrap">
+            <i class="el-icon-error message-error-icon"></i>
+            <p class="message-text">{{message}}</p>
+        </div>
+    </el-card>
+    <div v-else-if="status===0">
+        <v-initialize-view @finished="handleInitializeFinished"></v-initialize-view>
     </div>
-    <div v-else-if="status==1">
-        <LoginView @finished="handleLoginFinished"></LoginView>
+    <div v-else-if="status===1">
+        <v-login-view @finished="handleLoginFinished"></v-login-view>
     </div>
-    <div v-else="status==2">
+    <div v-else>
         <div class="layout">
-            <Layout>
-                <Header>
-                    <div class="layout-logo"></div>
-                    <div class="layout-nav">
-                        <Avatar style="background-color: #87d068; margin-right:10px;" icon="ios-person" />
-                        <Dropdown @on-click="handleUserAction">
-                            <a style="color: #ffffff;" href="javascript:void(0)">
-                                <span>{{user.name || user.username}}</span>
-                                <Icon type="ios-arrow-down"></Icon>
-                            </a>
-                            <DropdownMenu slot="list">
-                                <DropdownItem name="USER_ZONE">用户中心</DropdownItem>
-                                <DropdownItem name="USER_LOGOUT">用户登出</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </div>
-                </Header>
-                <Layout>
-                    <Sider hide-trigger :style="{background: '#fff'}">
-                        <Menu active-name="1-2" theme="light" width="auto" :open-names="['1']">
-                            <Submenu name="1">
-                                <template slot="title">
-                                    <Icon type="ios-navigate"></Icon>
-                                    Item 1
-                                </template>
-                                <MenuItem name="1-1">Option 1</MenuItem>
-                                <MenuItem name="1-2">Option 2</MenuItem>
-                                <MenuItem name="1-3">Option 3</MenuItem>
-                            </Submenu>
-                            <Submenu name="2">
-                                <template slot="title">
-                                    <Icon type="ios-keypad"></Icon>
-                                    Item 2
-                                </template>
-                                <MenuItem name="2-1">Option 1</MenuItem>
-                                <MenuItem name="2-2">Option 2</MenuItem>
-                            </Submenu>
-                            <Submenu name="3">
-                                <template slot="title">
-                                    <Icon type="ios-analytics"></Icon>
-                                    Item 3
-                                </template>
-                                <MenuItem name="3-1">Option 1</MenuItem>
-                                <MenuItem name="3-2">Option 2</MenuItem>
-                            </Submenu>
-                        </Menu>
-                    </Sider>
-                    <Layout :style="{padding: '0 24px 24px'}">
-                        <Breadcrumb :style="{margin: '24px 0'}">
-                            <BreadcrumbItem>Home</BreadcrumbItem>
-                            <BreadcrumbItem>Components</BreadcrumbItem>
-                            <BreadcrumbItem>Layout</BreadcrumbItem>
-                        </Breadcrumb>
-                        <Content :style="{padding: '24px', minHeight: '280px', background: '#fff'}">
-                            Content
-                        </Content>
-                    </Layout>
-                </Layout>
-            </Layout>
+            aaa
         </div>
     </div>
 </template>
 <script>
+    import '../common.css';
     import LoginView from './login';
     import InitializeView from './Initializer';
 
     export default {
         components: {
-            LoginView: LoginView,
-            InitializeView: InitializeView
+            'v-login-view': LoginView,
+            'v-initialize-view': InitializeView
         },
         data() {
             return {
-                status: 0,
-                msg: '正在初始化...',
-                isUnauthorized: true,
-                user: null,
+                status: -1,
+                message: '正在检测初始化...',
+                isError: false,
+                isInitialized: false,
+                user: {},
             }
         },
         created() {
@@ -115,51 +80,53 @@
                 .then(response => {
                     // 未初始化
                     if (!response.data) {
-                        this.status = 1;
+                        this.status = 0;
                     }
                     // 已初始化
                     else {
                         this.$axios.get('user/current.json').then(response => {
                             this.user = response.data;
-                            this.isUnauthorized = false;
                             this.status = 2;
                         }).catch(error => {
                             if (error.code === -401) {
-                                this.status = 2;
+                                this.status = 1;
                             } else {
-                                this.status = -1
-                                this.msg = error.msg;
+                                this.setStatusError(error.msg);
                             }
                         });
                     }
                 }).catch(error => {
-                    this.status = -1;
-                    this.msg = error.msg;
+                    this.setStatusError(error.msg);
                 }
             );
         },
         methods: {
+            setStatusError(message) {
+                this.status = -1;
+                this.message = message;
+                this.isError = true;
+            },
             toggleVisible() {
                 this.visible = !this.visible;
             },
             handleInitializeFinished() {
-                this.status = 2;
+                this.status = 1;
             },
             handleLoginFinished(userInfo) {
                 this.user = userInfo;
-                this.isUnauthorized = false;
+                this.status = 2;
             },
-            handleLogout(){
-                this.$axios.post('auth/logout.do').then(response=>{
+            handleLogout() {
+                this.$axios.post('auth/logout.do').then(response => {
                     this.isUnauthorized = true;
-                }).catch(error=>{
+                }).catch(error => {
                     this.$Message.error(error.msg);
-                }).finally(()=>{
+                }).finally(() => {
 
                 });
             },
-            handleUserAction(name){
-                if(name === 'USER_LOGOUT'){
+            handleUserAction(name) {
+                if (name === 'USER_LOGOUT') {
                     this.handleLogout();
                 }
             }
