@@ -4,18 +4,14 @@
     }
 </style>
 <template>
-    <div v-if="status==-1">
-        <Spin size="large" fix key="__status_1">{{msg}}</Spin>
-    </div>
-    <div v-else-if="status==0">
-        <Spin size="large" fix key="__status_0"></Spin>
-    </div>
-    <div v-else-if="status==1">
+    <div v-if="status==0">
         <InitializeView @finished="handleInitializeFinished"></InitializeView>
     </div>
+    <div v-else-if="status==1">
+        <LoginView @finished="handleLoginFinished"></LoginView>
+    </div>
     <div v-else="status==2">
-        <LoginView v-if="isUnauthorized" @finished="handleLoginFinished"></LoginView>
-        <div v-else class="layout">
+        <div class="layout">
             <Layout>
                 <Header>
                     <Menu mode="horizontal" theme="dark" active-name="1">

@@ -1,8 +1,7 @@
-import 'iview/dist/styles/iview.css';
 import Axios from './lib/axios';
-
 import Vue from 'vue';
-import iview from 'iview';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 import VueRouter from 'vue-router'
 import Frame from './view/frame';
 import routes from './lib/routes';
@@ -10,7 +9,7 @@ import routes from './lib/routes';
 // 暴露在全局
 Vue.prototype.$axios = Axios;
 
-Vue.use(iview);
+Vue.use(ElementUI);
 Vue.use(VueRouter);
 
 new Vue({
